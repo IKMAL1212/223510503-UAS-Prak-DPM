@@ -7,6 +7,7 @@ import Button from '../components/Button';
 import { register } from '../services/api';
 import { RootStackParamList } from '../types';
 
+
 const RegisterScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [username, setUsername] = useState('');
@@ -23,8 +24,20 @@ const RegisterScreen: React.FC = () => {
       setDialogMessage('Registration successful!');
       setVisible(true);
     } catch (error: any) {
-      console.error('Failed to register:', error.message);
-      setDialogMessage('Registration failed. Please try again.');
+      console.error('Failed to register:', error);
+
+      // Check if there is a specific validation error for username
+      if (error?.errors?.username) {
+        // This checks if the username already exists
+        if (error.errors.username === 'Username already exists') {
+          setDialogMessage('This username is already taken. Please choose another one.');
+        } else {
+          setDialogMessage('There was an error with your username. Please try again.');
+        }
+      } else {
+        setDialogMessage('Registration failed. Please try again.');
+      }
+
       setVisible(true);
     } finally {
       setLoading(false);
@@ -40,7 +53,7 @@ const RegisterScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>_____/^^\_____</Text>
+      <Text style={styles.title}>Register</Text>
 
       <Input
         placeholder="Username"
@@ -59,6 +72,7 @@ const RegisterScreen: React.FC = () => {
         secureTextEntry
       />
       <Button title="Register" onPress={handleRegister} disabled={loading} />
+
       <Portal>
         <Dialog visible={visible} onDismiss={handleDialogDismiss}>
           <Dialog.Title>{dialogMessage.includes('successful') ? 'Success' : 'Error'}</Dialog.Title>
@@ -79,11 +93,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     padding: 16,
+    backgroundColor: '#f5f5f5',
   },
   title: {
-    fontSize: 24,
-    marginBottom: 20,
+    fontSize: 28,
+    fontWeight: 'bold',
     textAlign: 'center',
+    marginBottom: 20,
+    color: '#333',
   },
 });
 

@@ -21,11 +21,16 @@ export interface ApiError {
     };
 }
 
+
+// types.ts
 export type RootStackParamList = {
     Splash: undefined;
     MainTabs: undefined;
     Register: undefined;
     Login: undefined;
     Profile: undefined;
-    Home: undefined;
+    EditProfile: { user: User }; // Pastikan ada tipe untuk EditProfile
+    // Tambahkan layar lainnya yang diperlukan
   };
+  
+  

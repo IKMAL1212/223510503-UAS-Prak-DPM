@@ -1,3 +1,4 @@
+// ProfileScreen.tsx
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
@@ -16,8 +17,8 @@ const ProfileScreen = () => {
       const token = await getAuthToken();
       if (token) {
         try {
-          const profileData = await fetchUserProfile() as User;
-          setUser(profileData);
+          const profileData = await fetchUserProfile();
+          setUser(profileData as User);
         } catch (error) {
           console.error('Failed to fetch user profile:', error);
         }
@@ -34,6 +35,13 @@ const ProfileScreen = () => {
       index: 0,
       routes: [{ name: 'Login' }],
     });
+  };
+
+  const handleEditProfile = () => {
+    if (user) {
+      // Navigasi ke EditProfile dengan parameter user
+      navigation.navigate('EditProfile', { user });
+    }
   };
 
   if (loading) {
@@ -75,6 +83,11 @@ const ProfileScreen = () => {
           <Text style={styles.profileValue}>{user.email}</Text>
         </View>
       </View>
+
+      {/* Edit Profile Button */}
+      <TouchableOpacity style={styles.button} onPress={handleEditProfile}>
+        <Text style={styles.buttonText}>Edit Profile</Text>
+      </TouchableOpacity>
 
       {/* Logout Button */}
       <TouchableOpacity style={styles.button} onPress={handleLogout}>
@@ -136,7 +149,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   button: {
-    backgroundColor: '#ff6347', // Vibrant logout button
+    backgroundColor: '#ff6347', // Vibrant button
     paddingVertical: 12,
     paddingHorizontal: 30,
     borderRadius: 25,
